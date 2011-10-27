@@ -1,0 +1,12 @@
+[ralph-updates]
+name=Fedora $releasever - $basearch - Released Updates
+baseurl=http://doc3.cima.es/fedora/cil/updates/$basearch/
+enabled=0
+gpgcheck=0
+
+[ralph-base]
+name=Ralph base repository ($releasever - $basearch)
+baseurl=http://doc3.cima.es/fedora/cil/fedora-$releasever/$basearch/
+metadata_expire=1
+enabled=1
+gpgcheck=1
