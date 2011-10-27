@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+repoLocalDir=~/Fedora/repos
+declare -a branches=(fedora-13 fedora-14)
+declare -a rpmdir=(i386 x86_64 noarch SRPMS)
+
+IFS=",$IFS"
+eval mkdir -pv $repoLocalDir/{"${branches[*]}"}/{"${rpmdir[*]}"}

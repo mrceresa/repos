@@ -1,0 +1,19 @@
+Scripts to create and mantain the internal RPM repo for RALPH.
+
+Usage:
+
+# Copy initial specs files to rpmbuild dir
+$ cp *.in ~/rpmbuild/SPECS
+
+# Build dependent package
+$ rpmbuild -ba ~/rpmbuild/SPECS/InsightToolkit
+
+# Copy deps to the public repository
+$ ./copy_deps
+
+# Build rpms
+$ ./package_core
+$ ./package_filters
+
+# Rsync the public repo and update it
+$ ./update_repo

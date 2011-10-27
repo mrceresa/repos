@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+repoLocalDir=~/Fedora/repos
+rpmbuildDir=~/rpmbuild/RPMS/
+#declare -a branches=(fedora-13 fedora-14)
+declare -a rpmdir=(i386 x86_64 noarch)
+declare -a deps=(ralph InsightToolkit)
+
+# Delete old builds
+rm -rf ralph-filters
+# Create tarball from last svn revision
+git clone git@github.com:mrceresa/cfilters.git ralph-filters
+
+filtersRev=$(date +%F | sed s/'-'/''/g)'git'
+
+# Create tarballs
+tar -czf ralph_filters.tar.gz ralph-filters
+
+# Build and check the package
+mv ralph_filters.tar.gz $HOME/rpmbuild/SOURCES/
+
+pushd $HOME/rpmbuild/
+rm SRPMS/ralph* RPMS/x86_64/ralph*
+
+# Sed the spec to change version as appropriate!
+
+newRev='Release:\t\t'$filtersRev
+sed s/^Release.*/$newRev/ SPECS/ralph-filters.spec.in > SPECS/ralph-filters.spec
+rpmbuild -ba SPECS/ralph-filters.spec
+
+# Check rpm definition
+rpmlint SRPMS/ralph-filters* RPMS/x86_64/ralph-filters*
+popd
+
+# Copy binary rpms to repo dir
+for a in "${rpmdir[@]}"
+do
+    for dep in "${deps[@]}"
+    do
+        find $rpmbuildDir$a -name $dep\* -exec cp {} $repoLocalDir/fedora-14/$a/ \;
+    done
+done
+

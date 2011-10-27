@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+repoLocalDir=~/Fedora/repos
+rpmbuildDir=~/rpmbuild/RPMS/
+#declare -a branches=(fedora-13 fedora-14)
+declare -a rpmdir=(x86_64 noarch)
+declare -a deps=(libodb vxl)
+
+# Copy binary rpms to repo dir
+for a in "${rpmdir[@]}"
+do
+    for dep in "${deps[@]}"
+    do
+        find $rpmbuildDir$a -name $dep\* -exec cp {} $repoLocalDir/fedora-14/$a/ \;
+    done
+done
+
