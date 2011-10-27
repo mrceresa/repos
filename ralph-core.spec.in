@@ -1,0 +1,133 @@
+   
+%if ! (0%{?fedora} > 12 || 0%{?rhel} > 5)
+  %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
+  %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
+%endif
+
+# we don't want to provide private python extension libs
+%{?filter_setup:
+    %filter_provides_in %{python_sitearch}/.*\.so$
+    %filter_setup
+}
+
+# sitelib for noarch packages, sitearch for others (remove the unneeded one)
+#%{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
+
+%define username        ralph_cli
+%define groupname       ralph_cli
+%define homedir         %_var/%username
+
+Buildroot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Summary:        RALPH pacakge
+Name:           ralph-core
+Version:        0.3
+Release:        0.20101124
+License:        BSD
+Group:          Applications/Engineering
+Vendor:         Center for Applied Medical Research
+Source0:        http://www.cima.es/ralph_svn.tar.gz
+URL:            http://www.cima.es/
+
+BuildRequires:  cmake >= 2.6.0
+BuildRequires:  python2-devel
+BuildRequires:  python-setuptools
+
+Requires(pre): shadow-utils
+Requires(post): openssh
+Requires: numpy
+Requires: scipy
+Requires: python-lxml
+Requires: python-sqlalchemy
+Requires: python-elixir
+Requires: avahi-ui-tools
+Requires: ipython >= 0.10.1
+Requires: MySQL-python
+Requires: sshfs
+Requires: ralph-filters
+Requires: python-lxml
+
+
+%description
+The Robust onLine Pulmonary Helper is both a collection of software
+developed during my PhD in medical image processing.
+
+It features:
+    * Emphysema analysis
+    * Parallel job computing
+    *
+
+
+%prep
+%setup -q -n ralph-core
+
+%build
+cd src
+%{__python} setup.py build
+
+
+%install
+rm -rf %{buildroot}
+cd src
+%{__python} setup.py install --skip-build --root %{buildroot}
+
+mkdir -p %{buildroot}%homedir
+mkdir -p %{buildroot}%homedir/RALPH_STORAGE
+mkdir -p %{buildroot}%homedir/experiments
+
+%clean
+cd src
+rm -rf %{buildroot}
+
+%check
+cd src
+%{__python} setup.py test
+
+%files
+%defattr(-,root,root,-)
+%dir %{_sysconfdir}/ralph.repos.d/
+%attr(755, %username, %groupname) %dir %homedir
+%attr(755, %username, %groupname) %dir %homedir/RALPH_STORAGE
+%attr(755, %username, %groupname) %dir %homedir/experiments
+%config(noreplace) %{_sysconfdir}/ralph.conf
+%config(noreplace) %{_sysconfdir}/ralph.repos.d/*
+
+%doc README INSTALL COPYING TODO
+
+%{python_sitelib}/*
+%{_bindir}/*
+
+
+
+%pre
+# Create system service account
+getent group %groupname >/dev/null || groupadd -r %groupname
+getent passwd %username >/dev/null || \
+useradd -r -g %groupname -m -d %homedir -s /bin/bash \
+-c "Ralph Application User" %username
+exit 0
+
+%post 
+/sbin/ldconfig
+if [ $1 -eq 1 ] ; then
+    # Generate ssh keypairs, if they don't exist
+    if [ ! -e %homedir/.ssh/id_dsa ]
+    then
+        su -l %username -c 'ssh-keygen -t dsa -f %homedir/.ssh/id_dsa -N ""'
+    fi
+fi
+
+
+%postun -p /sbin/ldconfig
+
+
+
+%changelog
+* Tue Feb 15 2011 Mario Ceresa mrceresa at gmail dot com ralph 0.2-0.20101124
+- Converted to git
+
+* Thu Feb 8 2011 Mario Ceresa mrceresa at gmail dot com ralph 0.2-0.20101124
+- Added system account setup and ssh keygen
+
+* Mon Nov 22 2010 Mario Ceresa mrceresa at gmail dot com ralph 0.1-0.20101124
+- Initial rpm release
+

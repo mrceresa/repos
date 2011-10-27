@@ -1,0 +1,76 @@
+
+Buildroot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Summary:        ITK C++ filters to perform image analysis tasks in RALPH pacakge
+Name:           ralph-filters
+Version:        0.2
+Release:        0.20101122svn159
+License:        BSD
+Group:          Applications/Engineering
+Vendor:         Center for Applied Medical Research
+Source0:        http://www.cima.es/ralph_filters.tar.gz
+URL:            http://www.cima.es/
+
+BuildRequires:  cmake >= 2.6.0
+BuildRequires:  InsightToolkit-devel
+BuildRequires:	boost
+BuildRequires:	geos-devel
+BuildRequires:	xerces-c-devel
+BuildRequires:	libodb-mysql-devel
+
+%description
+
+raplh cfilters
+
+%prep
+%setup -q -n ralph-filters
+
+%build
+%cmake -DCMAKE_BUILD_TYPE:STRING="RelwithDebInfo" \
+	-DCMAKE_VERBOSE_MAKEFILE=ON \
+	-DCMAKE_CXX_FLAGS=-std=c++0x \
+	.
+
+make %{?_smp_mflags}
+
+%install
+rm -rf %{buildroot}
+make install DESTDIR=%{buildroot}
+
+# FIXME: 
+chmod ugo+x %{buildroot}%{_libdir}/ralph/filters/lungs_analyze.sh
+
+# Install ld.so.config file to find libraries
+mkdir -p %{buildroot}%{_sysconfdir}/ld.so.conf.d/
+cat > %{buildroot}%{_sysconfdir}/ld.so.conf.d/ralph.conf << EOF
+%{_libdir}/ralph/filters/
+EOF
+
+%clean
+rm -rf %{buildroot}
+
+%files
+%defattr(-,root,root,-)
+%dir %{_libdir}/ralph/filters/
+%{_sysconfdir}/ld.so.conf.d/ralph.conf
+%{_libdir}/ralph/filters/*
+
+%post -p /sbin/ldconfig
+
+%postun -p /sbin/ldconfig
+
+%package        devel
+Summary:        ralph-cfilters
+Group:          Development/Libraries
+Requires:       %{name} = %{version}-%{release}
+
+%description devel
+ralph-cfilters
+
+%files devel
+%defattr(-,root,root)
+%{_includedir}/ralph/*
+
+%changelog
+* Mon Nov 22 2010 Mario Ceresa mrceresa@gmail.com ralph-cfilters 0.1-0.20101122svn159
+- Initial rpm release
+
