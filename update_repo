@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 repoDir=/var/www/fedora
-repoLocalDir=~/Fedora/repos
+repoLocalDir=~/ralph_repo/repos
 repoName=cil
-declare -a branch=(fedora-13 fedora-14)
+declare -a branch=(fedora-14 fedora-15)
 declare -a rpmdir=(i386 x86_64 noarch SRPMS)
 declare -a rsyncParam=(-avtz --delete)
 
