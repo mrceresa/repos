@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+repoLocalDir=~/ralph_repo/repos
+rpmsrcDir=~/rpmbuild/SRPMS
+rpmbuildDir=/var/lib/mock
+suffix="-ralph-x86_64"
+
+#declare -a targets=(fedora-14-x86_64 fedora-15-ralph-x86_64)
+#declare -a deps=(vxl InsightToolkit ITK elastix)
+declare -a targets=(fedora-14 fedora-15)
+declare -a deps=(vxl InsightToolkit ITK)
+
+#mock init -r fedora-14-ralph-x86_64
+#mock init -r fedora-15-ralph-x86_64
+
+for target in "${targets[@]}"
+do
+    t=$target$suffix
+    echo "Building target "$t
+    for dep in "${deps[@]}"
+    do
+	echo "Analyzing dependency "$dep
+	num=$(find $repoLocalDir/$target -name "$dep*" | wc | awk '{print $1}')
+	echo "Found "$num" rpms in repository"
+	if [ "$num" = "0" ]
+	then
+	    echo "Building " $dep
+	    mock rebuild -r $t -v $rpmsrcDir/$dep*.src.rpm
+	    find $rpmbuildDir/$t/result/ -name "$dep*.rpm" -exec cp {} $repoLocalDir/$target/x86_64/ \;
+            ./update_repo
+        else
+	     echo "."
+	fi
+
+    done
+done
+
+
