@@ -4,9 +4,9 @@ base="http://mrceresa.fedorapeople.org"
 
 declare -a srpms=(libodb-1.4.0-1.src.rpm libodb-mysql-1.4.0-1.src.rpm ITK-BinaryAttributeMorphology-1.0-1.fc14.src.rpm vxl-1.14.0-1.fc15.src.rpm InsightToolkit-3.20.0-5.fc15.src.rpm)
 
-
 for a in "${srpms[@]}"
 do
+    pushd ~/rpmbuild/SRPMS/
     wget $base/$a
-    rpm -ihv $a
+    popd
 done
