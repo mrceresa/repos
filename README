@@ -1,17 +1,23 @@
 Scripts to create and mantain the internal RPM repo for RALPH.
 
+# Install pre-requisites:
+# yum install libodb-devel
+
 Usage:
 
 # Copy initial specs files to rpmbuild dir
 $ cp *.in ~/rpmbuild/SPECS
 
-# Build dependent package
-$ rpmbuild -ba ~/rpmbuild/SPECS/InsightToolkit
+# Copy mock configuration files
+$ copy *.cfg /etc/mock/
 
-# Copy deps to the public repository
-$ ./copy_deps
+# Download dependencies from fedora people page
+$ ./get_srpms
 
-# Build rpms
+# Build dependendencies
+$ ./build_deps
+
+# Build ralph rpm
 $ ./package_core
 $ ./package_filters
 

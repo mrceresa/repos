@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-repoLocalDir=~/Fedora/repos
+repoLocalDir=~/ralph_repo/repos
 rpmbuildDir=~/rpmbuild/RPMS/
 #declare -a branches=(fedora-13 fedora-14)
 declare -a rpmdir=(i386 x86_64 noarch)
-declare -a deps=(ralph InsightToolkit)
+declare -a deps=(ralph)
 
 # Delete old builds
 rm -rf ralph-filters
@@ -25,18 +25,26 @@ rm SRPMS/ralph* RPMS/x86_64/ralph*
 
 newRev='Release:\t\t'$filtersRev
 sed s/^Release.*/$newRev/ SPECS/ralph-filters.spec.in > SPECS/ralph-filters.spec
-rpmbuild -ba SPECS/ralph-filters.spec
 
-# Check rpm definition
-rpmlint SRPMS/ralph-filters* RPMS/x86_64/ralph-filters*
+rm -rf /home/mario/rpmbuild/SRPMS/ralph-filters*.src.rpm
+rpmbuild -bs SPECS/ralph-filters.spec
 popd
 
+mock rebuild --no-clean -r fedora-14-ralph-x86_64 /home/mario/rpmbuild/SRPMS/ralph-filters*.src.rpm
+find /var/lib/mock/fedora-14-ralph-x86_64/result/ -name "ralph-filters*.rpm" -exec cp {} $repoLocalDir/fedora-14/x86_64/ \;
+mock rebuild --no-clean -r fedora-15-ralph-x86_64 /home/mario/rpmbuild/SRPMS/ralph-filters*.src.rpm
+find /var/lib/mock/fedora-15-ralph-x86_64/result/ -name "ralph-filters*.rpm" -exec cp {} $repoLocalDir/fedora-15/x86_64/ \;
+
+./update_repo
+
 # Copy binary rpms to repo dir
-for a in "${rpmdir[@]}"
-do
-    for dep in "${deps[@]}"
-    do
-        find $rpmbuildDir$a -name $dep\* -exec cp {} $repoLocalDir/fedora-14/$a/ \;
-    done
-done
+#for a in "${rpmdir[@]}"
+#do
+#    for dep in "${deps[@]}"
+#    do
+#        ##echo "find $rpmbuildDir$a -name $dep\* -exec cp {} $repoLocalDir/fedora-14/$a/ \;"
+#        find /var/lib/mock/fedora-14-x86_64/result/ -name $dep\* -exec cp {} $repoLocalDir/fedora-14/$a/ \;
+#        find /var/lib/mock/fedora-15-x86_64/result/ -name $dep\* -exec cp {} $repoLocalDir/fedora-15/$a/ \;
+#    done
+#done
 

@@ -4,10 +4,8 @@ rpmsrcDir=~/rpmbuild/SRPMS
 rpmbuildDir=/var/lib/mock
 suffix="-ralph-x86_64"
 
-#declare -a targets=(fedora-14-x86_64 fedora-15-ralph-x86_64)
-#declare -a deps=(vxl InsightToolkit ITK elastix)
 declare -a targets=(fedora-14 fedora-15)
-declare -a deps=(vxl InsightToolkit ITK)
+declare -a deps=(vxl InsightToolkit ITK libodb-mysql)
 
 mock init -r fedora-14-ralph-x86_64
 mock init -r fedora-15-ralph-x86_64

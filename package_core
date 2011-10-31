@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-repoLocalDir=~/Fedora/repos
+repoLocalDir=~/ralph_repo/repos
 rpmbuildDir=~/rpmbuild/RPMS/
 #declare -a branches=(fedora-13 fedora-14)
 declare -a rpmdir=(i386 x86_64 noarch)
-declare -a deps=(ralph InsightToolkit)
+declare -a deps=(ralph)
 
 # Delete old builds
 rm -rf ralph-core
@@ -36,6 +36,7 @@ for a in "${rpmdir[@]}"
 do
     for dep in "${deps[@]}"
     do
+        ##echo "find $rpmbuildDir$a -name $dep\* -exec cp {} $repoLocalDir/fedora-14/$a/ \;"
         find $rpmbuildDir$a -name $dep\* -exec cp {} $repoLocalDir/fedora-14/$a/ \;
     done
 done
