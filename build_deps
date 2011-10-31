@@ -9,8 +9,8 @@ suffix="-ralph-x86_64"
 declare -a targets=(fedora-14 fedora-15)
 declare -a deps=(vxl InsightToolkit ITK)
 
-#mock init -r fedora-14-ralph-x86_64
-#mock init -r fedora-15-ralph-x86_64
+mock init -r fedora-14-ralph-x86_64
+mock init -r fedora-15-ralph-x86_64
 
 for target in "${targets[@]}"
 do
@@ -24,7 +24,7 @@ do
 	if [ "$num" = "0" ]
 	then
 	    echo "Building " $dep
-	    mock rebuild -r $t -v $rpmsrcDir/$dep*.src.rpm
+	    mock rebuild --no-clean -r $t -v $rpmsrcDir/$dep*.src.rpm
 	    find $rpmbuildDir/$t/result/ -name "$dep*.rpm" -exec cp {} $repoLocalDir/$target/x86_64/ \;
             ./update_repo
         else
