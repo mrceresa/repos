@@ -5,15 +5,51 @@ rpmbuildDir=/var/lib/mock
 suffix="-ralph-x86_64"
 
 declare -a targets=(fedora-14 fedora-15)
-declare -a deps=(vxl InsightToolkit ITK libodb-mysql)
+declare -a deps=(vxl InsightToolkit ITK-BinaryAttributeMorphology libodb-mysql)
 
-mock init -r fedora-14-ralph-x86_64
-mock init -r fedora-15-ralph-x86_64
+SUCCESS=0
+
+build_target() {
+    target=$1
+    name=$2
+
+    if [ -z "$target" ]
+    then
+	echo "Please specify target"
+        return -1
+    fi
+
+    if [ -z "$name" ]
+    then
+	echo "Please specify SRPM name (without .src.rpm)"
+        return -1
+    fi
+
+    mock rebuild --no-clean -r $target -v $rpmsrcDir/$name*.src.rpm
+    find $rpmbuildDir/$t/result/ -name "$name*.rpm" -exec cp {} $repoLocalDir/$target/x86_64/ \;
+
+}
 
 for target in "${targets[@]}"
 do
     t=$target$suffix
     echo "Building target "$t
+    
+    ## Initialize buildroot
+    mock init -r $t
+    
+    # Build and install required software from the internal repository
+    build_target $t libodb-1.4.0-1
+    ./update_repo
+    
+    mock -r $t install libodb
+    if [ ! "$?" -eq $SUCCESS ]
+    then
+	echo "Problem installing libodb. Please check."
+	echo "Dependency build aborted"
+	exit
+    fi
+    
     for dep in "${deps[@]}"
     do
 	echo "Analyzing dependency "$dep
@@ -22,8 +58,9 @@ do
 	if [ "$num" = "0" ]
 	then
 	    echo "Building " $dep
-	    mock rebuild --no-clean -r $t -v $rpmsrcDir/$dep*.src.rpm
-	    find $rpmbuildDir/$t/result/ -name "$dep*.rpm" -exec cp {} $repoLocalDir/$target/x86_64/ \;
+	    #mock rebuild --no-clean -r $t -v $rpmsrcDir/$dep*.src.rpm
+	    #find $rpmbuildDir/$t/result/ -name "$dep*.rpm" -exec cp {} $repoLocalDir/$target/x86_64/ \;
+	    build_target $t $dep
             ./update_repo
         else
 	     echo "."
