@@ -2,4 +2,11 @@
 source defs.sh
 
 IFS=",$IFS"
-eval mkdir -pv $repoLocalDir/{"${targets[*]}"}/{"${rpmdir[*]}"}
+for target in "${targets[@]}"
+do
+    for rd in "${rpmdir[@]}"
+    do
+	mkdir -pv $repoLocalDir/$target/$rd
+	createrepo $repoLocalDir/$target/$rd
+    done
+done
