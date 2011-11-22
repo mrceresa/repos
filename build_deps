@@ -1,38 +1,41 @@
 #!/usr/bin/env bash
-repoLocalDir=~/ralph_repo/repos
-rpmsrcDir=~/rpmbuild/SRPMS
-rpmbuildDir=/var/lib/mock
-suffix="-ralph-x86_64"
 
-declare -a targets=(fedora-14 fedora-15)
+source defs.sh
+
+#repoLocalDir=~/ralph_repo/repos
+#rpmsrcDir=~/rpmbuild/SRPMS
+#rpmbuildDir=/var/lib/mock
+#suffix="-ralph-x86_64"
+
+#declare -a targets=(fedora-14 fedora-15)
 declare -a deps=(vxl InsightToolkit ITK-BinaryAttributeMorphology libodb-mysql)
 
-SUCCESS=0
+#SUCCESS=0
 
-build_target() {
-    target=$1
-    name=$2
+#build_target() {
+#    target=$1
+#    name=$2
 
-    if [ -z "$target" ]
-    then
-	echo "Please specify target"
-        return -1
-    fi
+#    if [ -z "$target" ]
+#    then
+#	echo "Please specify target"
+#        return -1
+#    fi
 
-    if [ -z "$name" ]
-    then
-	echo "Please specify SRPM name (without .src.rpm)"
-        return -1
-    fi
+#    if [ -z "$name" ]
+#    then
+#	echo "Please specify SRPM name (without .src.rpm)"
+#        return -1
+#    fi
 
-    mock rebuild --no-clean -r $target -v $rpmsrcDir/$name*.src.rpm
-    find $rpmbuildDir/$t/result/ -name "$name*.rpm" -exec cp {} $repoLocalDir/$target/x86_64/ \;
+#    mock rebuild --no-clean -r $target -v $rpmsrcDir/$name*.src.rpm
+#    find $rpmbuildDir/$t/result/ -name "$name*.rpm" -exec cp {} $repoLocalDir/$target/x86_64/ \;
 
-}
+#}
 
 for target in "${targets[@]}"
 do
-    t=$target$suffix
+    t=$target
     echo "Building target "$t
     
     ## Initialize buildroot
@@ -42,7 +45,9 @@ do
     build_target $t libodb-1.4.0-1
     ./update_repo
     
-    mock -r $t install libodb
+    mock -r $t install libodb 
+    mock -r $t install libodb-devel
+    
     if [ ! "$?" -eq $SUCCESS ]
     then
 	echo "Problem installing libodb. Please check."

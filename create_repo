@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
-repoLocalDir=~/ralph_repo/repos
-declare -a branches=(fedora-13 fedora-14 fedora-15)
-declare -a rpmdir=(i386 x86_64 noarch SRPMS)
+source defs.sh
 
 IFS=",$IFS"
-eval mkdir -pv $repoLocalDir/{"${branches[*]}"}/{"${rpmdir[*]}"}
+eval mkdir -pv $repoLocalDir/{"${targets[*]}"}/{"${rpmdir[*]}"}
