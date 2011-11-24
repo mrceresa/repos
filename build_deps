@@ -2,7 +2,7 @@
 
 source defs.sh
 
-declare -a deps=(vxl InsightToolkit ITK-BinaryAttributeMorphology libodb-mysql)
+declare -a deps=(libodb-mysql vxl InsightToolkit ITK-BinaryAttributeMorphology)
 
 for target in "${targets[@]}"
 do
@@ -27,23 +27,22 @@ do
     fi
     
     
-#    for dep in "${deps[@]}"
-#    do
-#	echo "Analyzing dependency "$dep
-#	num=$(find $repoLocalDir/$target -name "$dep*" | wc | awk '{print $1}')
-#	echo "Found "$num" rpms in repository"
-#	if [ "$num" = "0" ]
-#	then
-#	    echo "Building " $dep
-#	    #mock rebuild --no-clean -r $t -v $rpmsrcDir/$dep*.src.rpm
-#	    #find $rpmbuildDir/$t/result/ -name "$dep*.rpm" -exec cp {} $repoLocalDir/$target/x86_64/ \;
-#	    build_target $t $dep
-#            ./update_repo
-#        else
-#	     echo "."
-#	fi
+    for dep in "${deps[@]}"
+    do
+	echo "Analyzing dependency "$dep
+	num=$(find $repoLocalDir/$target -name "$dep*" | wc | awk '{print $1}')
+	echo "Found "$num" rpms in repository"
+	if [ "$num" = "0" ]
+	then
+	    echo "Building " $dep
+	    build_target $t $dep
+	    # Make newly built packages available as dependecies for the next ones
+	    ./update_db
+        else
+	     echo "."
+	fi
 
-#    done
+    done
 done
 
 
