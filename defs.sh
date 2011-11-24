@@ -9,7 +9,7 @@ rpmbuildDir=/var/lib/mock
 suffix="-ralph-x86_64"
 
 declare -a rpmdir=(x86_64 noarch SRPMS)
-declare -a targets=(fedora-14$suffix fedora-15$suffix)
+declare -a targets=(fedora-15$suffix fedora-14$suffix)
 
 build_target() {
     target=$1
@@ -29,7 +29,7 @@ build_target() {
     fi
     
     mock rebuild --no-clean -r $target -v $rpmsrcDir/$name$ver*.src.rpm
-    find $rpmbuildDir/$target/result/ -name "$name*.src.rpm" -exec cp {} $repoLocalDir/$target/SRPMS/ \;
+    find $rpmbuildDir/$target/result/ -name "$name$ver*.src.rpm" -exec cp {} $repoLocalDir/$target/SRPMS/ \;
     find $rpmbuildDir/$target/result/ -name "$name*.rpm" -exec cp {} $repoLocalDir/$target/x86_64/ \;
 
 }
