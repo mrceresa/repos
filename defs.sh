@@ -14,6 +14,7 @@ declare -a targets=(fedora-14$suffix fedora-15$suffix)
 build_target() {
     target=$1
     name=$2
+    ver=$3
         
     if [ -z "$target" ]
     then
@@ -27,9 +28,10 @@ build_target() {
         return -1
     fi
     
-    mock rebuild --no-clean -r $target -v $rpmsrcDir/$name*.src.rpm
+    mock rebuild --no-clean -r $target -v $rpmsrcDir/$name$ver*.src.rpm
+    find $rpmbuildDir/$target/result/ -name "$name*.src.rpm" -exec cp {} $repoLocalDir/$target/SRPMS/ \;
     find $rpmbuildDir/$target/result/ -name "$name*.rpm" -exec cp {} $repoLocalDir/$target/x86_64/ \;
-                                
+
 }
 
 echo "- Local repo is set to: "$repoLocalDir

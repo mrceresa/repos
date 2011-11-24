@@ -10,3 +10,5 @@ do
 	createrepo $repoLocalDir/$target/$rd
     done
 done
+
+eval mkdir -pv $repoDir/{"${targets[*]}"}/{"${rpmdir[*]}"}

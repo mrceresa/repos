@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-source defs.sh
-
-repoDir=/var/www/fedora/cil
-
-IFS=",$IFS"
-eval mkdir -pv $repoDir/{"${targets[*]}"}/{"${rpmdir[*]}"}

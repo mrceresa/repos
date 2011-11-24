@@ -12,6 +12,7 @@ do
     do
         echo -e "\033[34m\t* $dir3:\033[0m"
         cd $dir3
+        createrepo ./
         echo rsync "${rsyncParam[@]}" ./* $repoDir/$dir2/$dir3
         rsync "${rsyncParam[@]}" ./* $repoDir/$dir2/$dir3
         cd ..

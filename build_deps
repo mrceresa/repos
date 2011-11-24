@@ -13,11 +13,11 @@ do
     mock init -r $t
     
     # Build and install required software from the internal repository
-    build_target $t libodb-1.4.0-1
-    ./update_repo
+    build_target $t libodb -1.4.0-1
+#    ./update_repo
     
-    mock -r $t install libodb 
-    mock -r $t install libodb-devel
+#    mock -r $t install libodb 
+#    mock -r $t install libodb-devel
     
     
 #    if [ ! "$?" -eq $SUCCESS ]
