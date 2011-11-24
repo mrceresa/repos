@@ -7,7 +7,6 @@ do
     for rd in "${rpmdir[@]}"
     do
 	mkdir -pv $repoLocalDir/$target/$rd
-	createrepo $repoLocalDir/$target/$rd
     done
 done
 
