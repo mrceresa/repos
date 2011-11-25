@@ -3,7 +3,7 @@ source defs.sh
 
 declare -a rsyncParam=(-avtz --delete)
 
-pushd $repoLocalDir
+pushd $repoDir
 for dir2 in "${targets[@]}"
 do
     echo -e "\033[31mUpdate $dir2 repos:\033[0m"
@@ -12,9 +12,8 @@ do
     do
         echo -e "\033[34m\t* $dir3:\033[0m"
         cd $dir3
-        createrepo ./
-        echo rsync "${rsyncParam[@]}" ./* $repoDir/$dir2/$dir3
-        rsync "${rsyncParam[@]}" ./* $repoDir/$dir2/$dir3
+#	rm -rf repodata/
+	createrepo ./
         cd ..
     done
     cd ..
