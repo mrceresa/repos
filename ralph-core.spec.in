@@ -31,6 +31,8 @@ URL:            http://www.cima.es/
 BuildRequires:  cmake >= 2.6.0
 BuildRequires:  python2-devel
 BuildRequires:  python-setuptools
+BuildRequires:  Cython
+BuildRequires:  numpy
 
 Requires(pre): shadow-utils
 Requires(post): openssh
@@ -122,6 +124,9 @@ fi
 
 
 %changelog
+* Fri Nov 25 2011 Mario Ceresa mrceresa at gmail dot com ralph 0.2-0.20101124
+- Added more BRs
+
 * Tue Feb 15 2011 Mario Ceresa mrceresa at gmail dot com ralph 0.2-0.20101124
 - Converted to git
 

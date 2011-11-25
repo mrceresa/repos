@@ -12,10 +12,13 @@ URL:            http://www.cima.es/
 
 BuildRequires:  cmake >= 2.6.0
 BuildRequires:  InsightToolkit-devel
-BuildRequires:	boost
+BuildRequires:	boost-devel
+BuildRequires:	boost-filesystem
 BuildRequires:	geos-devel
 BuildRequires:	xerces-c-devel
 BuildRequires:	libodb-mysql-devel
+BuildRequires:	log4cpp-devel
+BuildRequires:	vtk-devel
 
 %description
 
@@ -71,6 +74,9 @@ ralph-cfilters
 %{_includedir}/ralph/*
 
 %changelog
-* Mon Nov 22 2010 Mario Ceresa mrceresa@gmail.com ralph-cfilters 0.1-0.20101122svn159
+* Fri Nov 25 2011 Mario Ceresa mrceresa@gmail.com ralph-filters 0.1-0.20101122svn159
+- Added more BRs
+
+* Mon Nov 22 2010 Mario Ceresa mrceresa@gmail.com ralph-filters 0.1-0.20101122svn159
 - Initial rpm release
 
