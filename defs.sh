@@ -30,6 +30,13 @@ build_target() {
     fi
     
     mock rebuild --no-clean -r $target -v $rpmsrcDir/$name$ver*.src.rpm
+    
+    if [ ! "$?" -eq $SUCCESS ]
+    then
+	echo "Can't build package "$name" please check!"
+	exit
+    fi
+    
     find $rpmbuildDir/$target/result/ -name "$name$ver*.src.rpm" -exec cp {} $repoLocalDir/$target/SRPMS/ \;
     find $rpmbuildDir/$target/result/ -name "$name*.rpm" ! -name "*.src.rpm" -exec cp {} $repoLocalDir/$target/x86_64/ \;
 
@@ -42,6 +49,7 @@ build_if_not_already() {
     echo "Preparing package "$name$ver" for target "$target
     num=$(find $repoDir/$target -name "$name*" | wc | awk '{print $1}')
     echo "Found "$num" rpms for "$name" in repository"
+
     if [ "$num" -eq "0" ]
     then
         echo "Building " $name
@@ -49,10 +57,11 @@ build_if_not_already() {
 	# Make newly built packages available as dependecies for the next ones
         ./update_repo
     fi
+
     num=$(find $repoDir/$target -name "$name*" | wc | awk '{print $1}')
     if [ "$num" -eq "0" ]
     then
-	echo "Can't build package "$name" please check!"
+	echo "Package "$name" is not in the repository: please check!"
 	exit
     fi
                                                                                     
