@@ -2,7 +2,6 @@
 
 SUCCESS=0
 
-repoLocalDir=~/ralph_repo/repos
 repoDir=/var/www/fedora/cil
 rpmsrcDir=~/rpmbuild/SRPMS
 rpmbuildDir=/var/lib/mock
@@ -29,16 +28,21 @@ build_target() {
         exit
     fi
     
-    mock rebuild --no-clean -r $target -v $rpmsrcDir/$name$ver*.src.rpm
+    mock rebuild --no-clean -v -r $target $rpmsrcDir/$name$ver*.src.rpm
     
     if [ ! "$?" -eq $SUCCESS ]
     then
-	echo "Can't build package "$name" please check!"
-	exit
+	echo "Can't build package "$name" retrying once..."
+	mock rebuild --no-clean -v -r $target $rpmsrcDir/$name$ver*.src.rpm
+	if [ ! "$?" -eq $SUCCESS ]
+        then
+	    echo "Can't build package "$name" please check!"
+	    exit
+	fi
     fi
     
-    find $rpmbuildDir/$target/result/ -name "$name$ver*.src.rpm" -exec cp {} $repoLocalDir/$target/SRPMS/ \;
-    find $rpmbuildDir/$target/result/ -name "$name*.rpm" ! -name "*.src.rpm" -exec cp {} $repoLocalDir/$target/x86_64/ \;
+    find $rpmbuildDir/$target/result/ -name "$name$ver*.src.rpm" -exec cp '{}' $repoDir/$target/SRPMS/ \;
+    find $rpmbuildDir/$target/result/ -name "$name*.rpm" ! -name "*.src.rpm" -exec cp '{}' $repoDir/$target/x86_64/ \;
 
 }
 
@@ -68,7 +72,6 @@ build_if_not_already() {
 
 }
 
-echo "- Local repo is set to: "$repoLocalDir
 echo "- Public repo is server from: "$repoDir
 echo "- Source SRPMs are looked for into: "$rpmsrcDir
 echo "- Build dir is: "$rpmbuildDir
