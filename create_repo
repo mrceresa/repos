@@ -6,7 +6,6 @@ for target in "${targets[@]}"
 do
     for rd in "${rpmdir[@]}"
     do
-	mkdir -pv $repoLocalDir/$target/$rd
 	mkdir -pv $repoDir/$target/$rd
     done
 done
