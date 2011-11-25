@@ -1,43 +1,31 @@
 #!/usr/bin/env bash
-repoLocalDir=~/ralph_repo/repos
-rpmbuildDir=~/rpmbuild/RPMS/
-#declare -a branches=(fedora-13 fedora-14)
-declare -a rpmdir=(i386 x86_64 noarch)
-declare -a deps=(ralph)
+
+source defs.sh
 
 # Delete old builds
 rm -rf ralph-core
-# Create tarball from last svn revision
-#svn co http://localhost/svn/python/solidify/trunk/src ralph-core
+#### Create tarball from last revision
 git clone git@github.com:mrceresa/solidify.git ralph-core
-
 coreRev=$(date +%F | sed s/'-'/''/g)'git'
-
-# Create tarballs
 tar -czf ralph_svn.tar.gz ralph-core
 
-# Build and check the package
+#### Build the source rpm
 mv ralph_svn.tar.gz $HOME/rpmbuild/SOURCES/
 
 pushd $HOME/rpmbuild/
-rm SRPMS/ralph* RPMS/x86_64/ralph*
 
+# Clean old packages
+rm SRPMS/ralph* RPMS/x86_64/ralph*
 # Sed the spec to change version as appropriate!
 newRev='Release:\t\t'$coreRev
 sed s/^Release.*/$newRev/ SPECS/ralph-core.spec.in > SPECS/ralph-core.spec
-rpmbuild -ba SPECS/ralph-core.spec
+# Generate the SRPM
+rpmbuild -bs SPECS/ralph-core.spec
 
-# Check rpm definition
-rpmlint SRPMS/ralph-core* RPMS/x86_64/ralph-core*
 popd
 
-# Copy binary rpms to repo dir
-for a in "${rpmdir[@]}"
+#### Build the binary rpm
+for target in "${targets[@]}"
 do
-    for dep in "${deps[@]}"
-    do
-        ##echo "find $rpmbuildDir$a -name $dep\* -exec cp {} $repoLocalDir/fedora-14/$a/ \;"
-        find $rpmbuildDir$a -name $dep\* -exec cp {} $repoLocalDir/fedora-14/$a/ \;
-    done
+    build_if_not_already $target ralph-core
 done
-
