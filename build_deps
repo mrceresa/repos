@@ -2,46 +2,48 @@
 
 source defs.sh
 
-declare -a deps=(libodb-mysql vxl InsightToolkit ITK-BinaryAttributeMorphology)
+declare -a deps=(libodb libodb-mysql vxl InsightToolkit ITK-BinaryAttributeMorphology)
 
 for target in "${targets[@]}"
 do
-    t=$target
-    echo "Building target "$t
+    echo "Building target "$target
     
     ## Initialize buildroot
-    mock init -r $t
+    mock init -r $target
     
-    # Build and install required software from the internal repository
-    build_target $t libodb -1.4.0-1
-    ./update_repo
+#    # Build and install required software from the internal repository
+    build_if_not_already $target libodb -1.4.0-1
     
-    mock -r $t install libodb-devel
+#    # Expire yum cache manually so it is forced to re-download it at next step
+#    yum --installroot /var/lib/mock/$target/root/ --setopt=tsflags=nocontexts clean metadata
     
+#    # Install from a fresh copy of the cache. If it doesn't work fail.
+#    mock -r $target install libodb-devel
     
-    if [ ! "$?" -eq $SUCCESS ]
-    then
-	echo "Problem installing libodb. Please check."
-	echo "Dependency build aborted"
-	exit
-    fi
+#    if [ ! "$?" -eq $SUCCESS ]
+#    then
+#	echo "Problem installing libodb. Please check."
+#	echo "Dependency build aborted"
+#	exit
+#    fi
     
-    
+    # Install other packages
     for dep in "${deps[@]}"
     do
-	echo "Analyzing dependency "$dep
-	num=$(find $repoLocalDir/$target -name "$dep*" | wc | awk '{print $1}')
-	echo "Found "$num" rpms in repository"
-	if [ "$num" = "0" ]
+	build_if_not_already $target $dep
+	# Expire yum cache manually so it is forced to re-download it at next step
+        yum --installroot /var/lib/mock/$target/root/ --setopt=tsflags=nocontexts clean all
+	# Install from a fresh copy of the cache. If it doesn't work fail.
+        mock -r $target install $dep-devel
+    
+        if [ ! "$?" -eq $SUCCESS ]
 	then
-	    echo "Building " $dep
-	    build_target $t $dep
-	    # Make newly built packages available as dependecies for the next ones
-	    ./update_db
-        else
-	     echo "."
-	fi
+	    echo "Problem installing "$dep". Please check!"
+	    echo "Dependency build aborted."
+	    exit
+        fi
 
+    
     done
 done
 
