@@ -2,7 +2,7 @@
 
 source defs.sh
 
-declare -a deps=(libodb libodb-mysql vxl InsightToolkit ITK-BinaryAttributeMorphology)
+declare -a deps=(libodb libodb-mysql vxl InsightToolkit)
 
 for target in "${targets[@]}"
 do
