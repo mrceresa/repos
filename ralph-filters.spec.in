@@ -19,6 +19,7 @@ BuildRequires:	xerces-c-devel
 BuildRequires:	libodb-mysql-devel
 BuildRequires:	log4cpp-devel
 BuildRequires:	vtk-devel
+BuildRequires:	vxl-devel
 
 %description
 
@@ -30,9 +31,9 @@ raplh cfilters
 %build
 %cmake -DCMAKE_BUILD_TYPE:STRING="RelwithDebInfo" \
 	-DCMAKE_VERBOSE_MAKEFILE=ON \
-	-DCMAKE_CXX_FLAGS=-std=c++0x \
 	.
-
+#	-DCMAKE_CXX_FLAGS=-std=c++0x \
+	
 make %{?_smp_mflags}
 
 %install
