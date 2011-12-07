@@ -51,7 +51,7 @@ build_if_not_already() {
     name=$2
     ver=$3
     echo "Preparing package "$name$ver" for target "$target
-    num=$(find $repoDir/$target -name "$name*" | wc | awk '{print $1}')
+    num=$(find $repoDir/$target -name "$name*" | grep -v SRPMS | wc | awk '{print $1}')
     echo "Found "$num" rpms for "$name" in repository"
 
     if [ "$num" -eq "0" ]
@@ -62,7 +62,7 @@ build_if_not_already() {
         ./update_repo
     fi
 
-    num=$(find $repoDir/$target -name "$name*" | wc | awk '{print $1}')
+    num=$(find $repoDir/$target -name "$name*" | grep -v SRPMS | wc | awk '{print $1}')
     if [ "$num" -eq "0" ]
     then
 	echo "Package "$name" is not in the repository: please check!"
