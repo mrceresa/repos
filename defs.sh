@@ -2,7 +2,7 @@
 
 SUCCESS=0
 
-repoDir=/var/www/fedora/cil
+repoDir=~/cil
 rpmsrcDir=~/rpmbuild/SRPMS
 rpmbuildDir=/var/lib/mock
 suffix="-ralph-x86_64"
