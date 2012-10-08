@@ -8,8 +8,8 @@ rpmbuildDir=/var/lib/mock
 suffix="-ralph-x86_64"
 
 declare -a rpmdir=(x86_64 noarch SRPMS)
-declare -a targets=(fedora-15$suffix fedora-14$suffix fedora-16$suffix)
-#declare -a targets=(fedora-16$suffix)
+#declare -a targets=(fedora-15$suffix fedora-14$suffix fedora-16$suffix)
+declare -a targets=(fedora-17$suffix)
 
 build_target() {
     target=$1
