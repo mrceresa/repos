@@ -6,7 +6,7 @@ declare -a deps=(libodb libodb-mysql vxl InsightToolkit)
 
 for target in "${branches[@]}"
 do
-    target=$target"ralph-x86_64"
+    target=$target"-ralph-x86_64"
     echo "Building target "$target
     
     ## Initialize buildroot
