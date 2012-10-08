@@ -2,14 +2,17 @@
 
 SUCCESS=0
 
-repoDir=~/cil
+repoDir=~/local_repo/cil
 rpmsrcDir=~/rpmbuild/SRPMS
 rpmbuildDir=/var/lib/mock
 suffix="-ralph-x86_64"
 
-declare -a rpmdir=(x86_64 noarch SRPMS)
-#declare -a targets=(fedora-15$suffix fedora-14$suffix fedora-16$suffix)
-declare -a targets=(fedora-17$suffix)
+fasLogin=mrceresa
+repoLocalDir=$repoDir
+repoName=cil
+
+declare -a rpmdir=(i386 x86_64 noarch SRPMS)
+declare -a branches=(fedora-17 fedora-16)
 
 build_target() {
     target=$1
@@ -75,7 +78,7 @@ build_if_not_already() {
 echo "- Public repo is server from: "$repoDir
 echo "- Source SRPMs are looked for into: "$rpmsrcDir
 echo "- Build dir is: "$rpmbuildDir
-echo "- Build will happen for targets: "$targets
+echo "- Build will happen for branches: "$branches
 
 
 
