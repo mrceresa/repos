@@ -11,7 +11,7 @@ Source0:        http://www.cima.es/ralph_filters.tar.gz
 URL:            http://www.cima.es/
 
 BuildRequires:  cmake >= 2.6.0
-BuildRequires:  InsightToolkit-devel
+BuildRequires:  InsightToolkit-devel >= 3.20.1
 BuildRequires:	boost-devel
 BuildRequires:	boost-filesystem
 BuildRequires:	geos-devel
@@ -31,8 +31,9 @@ raplh cfilters
 %build
 %cmake -DCMAKE_BUILD_TYPE:STRING="RelwithDebInfo" \
 	-DCMAKE_VERBOSE_MAKEFILE=ON \
+	-DCMAKE_CXX_FLAGS=-fpermissive \
 	.
-#	-DCMAKE_CXX_FLAGS=-std=c++0x \
+
 	
 make %{?_smp_mflags}
 
@@ -75,6 +76,9 @@ ralph-cfilters
 %{_includedir}/ralph/*
 
 %changelog
+* Tue Mar 27 2012 Mario Ceresa mrceresa@gmail.com ralph-filters 0.1-0.20101122svn159
+- Added permissive flag
+
 * Fri Nov 25 2011 Mario Ceresa mrceresa@gmail.com ralph-filters 0.1-0.20101122svn159
 - Added more BRs
 
