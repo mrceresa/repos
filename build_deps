@@ -4,21 +4,21 @@ source defs.sh
 
 declare -a deps=(libodb libodb-mysql vxl InsightToolkit)
 
-for target in "${branches[@]}"
+for branch in "${branches[@]}"
 do
-    target=$target"-ralph-x86_64"
+    target=$branch"-ralph-x86_64"
     echo "Building target "$target
     
     ## Initialize buildroot
     mock init -r $target
     
     # Build and install required software from the internal repository
-    build_if_not_already $target libodb -1.4.0-1
+    build_if_not_already $branch $target libodb -1.4.0-1
     
     # Install other packages
     for dep in "${deps[@]}"
     do
-	build_if_not_already $target $dep
+	build_if_not_already $branch $target $dep
     done
 done
 
