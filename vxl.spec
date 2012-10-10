@@ -2,7 +2,7 @@
 
 Name:		vxl	
 Version:	1.17.0	
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	C++ Libraries for Computer Vision Research and Implementation
 Group:		Development/Libraries
 License:	BSD
@@ -20,6 +20,11 @@ Patch8:		0008-More-sonames.patch
 Patch9:		0009-Bumped-up-version-to-1.14.patch
 Patch10:	0010-Use-system-FindEXPAT.patch
 Patch11:	0011-Do-not-use-bundled-minizip.patch
+Patch12:	0012-Added-Coin3D-Submitted-by-Volker-Frohlich.patch
+Patch13:	0013-Added-SIMVoleon-Submitted-by-Volker-Frohlich.patch
+Patch14:	0014-Added-additional-search-path-for-xerces-Submitted-by.patch
+Patch15:	0015-Manage-KL-library-Submitted-by-Volker-Frohlich.patch
+Patch16:	0016-Manage-KL-library-2-2-Submitted-by-Volker-Frohlich.patch
 
 Buildroot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -36,6 +41,19 @@ BuildRequires:	expat-devel
 BuildRequires:	shapelib-devel
 BuildRequires:	minizip-devel
 BuildRequires:	dcmtk-devel
+BuildRequires:	Coin2-devel
+BuildRequires:	dcmtk-devel
+BuildRequires:	doxygen
+BuildRequires:	expat-devel
+BuildRequires:	freeglut-devel
+BuildRequires:	klt-devel
+BuildRequires:	libdc1394-devel
+BuildRequires:	libgeotiff-devel
+BuildRequires:	libjpeg-turbo-devel
+BuildRequires:	SIMVoleon-devel
+BuildRequires:	texi2html
+BuildRequires:	xerces-c-devel
+BuildRequires:	zlib-devel
 
 %description
 VXL (the Vision-something-Libraries) is a collection of C++ libraries designed
@@ -58,6 +76,8 @@ done
 
 find contrib/brl/b3p/shapelib -type f ! -name 'CMakeLists.txt' -execdir rm {} +
 find contrib/brl/b3p/minizip -type f ! -name 'CMakeLists.txt' -execdir rm {} +
+find contrib/brl/b3p/expat -type f ! -name 'CMakeLists.txt' -execdir rm {} +
+find contrib/gel/vgel/kl -type f ! -name 'CMakeLists.txt' -execdir rm {} +
 
 # v3p/mpeg2 lib in fedora is not enough to build the target. Moreover it is in rpmfusion repo
 # v3p/netlib dependency not removed because of heavily modifications
@@ -74,6 +94,12 @@ find contrib/brl/b3p/minizip -type f ! -name 'CMakeLists.txt' -execdir rm {} +
 %patch9 -p1
 %patch10 -p1
 %patch11 -p1
+%patch12 -p1
+%patch13 -p1
+%patch14 -p1
+%patch15 -p1
+%patch16 -p1
+
 
 #Fix lib / lib64 problem during install:
 find . -name CMakeLists.txt -exec sed -i "s/INSTALL_TARGETS([ ]*\/lib/INSTALL_TARGETS(\/lib\$\{LIB_SUFFIX\}/;" {} +
@@ -118,7 +144,6 @@ find . -name "*.txx" | xargs chmod ugo-x
 	-DCMAKE_CXX_FLAGS:STRING="-fpermissive" .
 
 make %{?_smp_mflags}
-#make
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -175,6 +200,10 @@ develop code based on VXL.
 %{_libdir}/*.so
 
 %changelog
+* Wed Oct 10 2012 Mario Ceresa mrceresa fedoraproject org vxl 1.17.0-2%{?dist}
+- Added patches 12-16 from https://bugzilla.redhat.com/show_bug.cgi?id=567086#c42
+- Minor rework of the spec file as pointed out by Volker in the previous link
+
 * Wed Oct 10 2012 Mario Ceresa mrceresa fedoraproject org vxl 1.17.0-1%{?dist}
 - Updated to new version
 - Reworked patches to the new version
