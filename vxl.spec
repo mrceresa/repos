@@ -1,13 +1,13 @@
 # NOTE: The Patch2 source file and some of the cmake flags are copied from http://packages.debian.org/source/squeeze/vxl
 
 Name:		vxl	
-Version:	1.14.0	
+Version:	1.17.0	
 Release:	1%{?dist}
 Summary:	C++ Libraries for Computer Vision Research and Implementation
 Group:		Development/Libraries
 License:	BSD
 URL:		http://vxl.sourceforge.net/
-Source0:	http://sourceforge.net/projects/vxl/files/vxl/1.14/vxl-1.14.0.zip
+Source0:	http://sourceforge.net/projects/vxl/files/vxl/1.14/vxl-r35730.tar.gz
 Source2:	https://vxl.svn.sourceforge.net/svnroot/vxl/trunk/core/vxl_copyright.h
 Patch1:		0001-Added-include-path-for-geotiff.patch
 Patch2:		0002-Added-soname-info-for-core-libraries.patch
@@ -16,14 +16,10 @@ Patch4:		0004-Added-more-soname.patch
 Patch5:		0005-Do-not-build-OUL.patch
 Patch6:		0006-BUG-rplyConfig.cmake-has-wrong-include-path.patch
 Patch7:		0007-Arguments-of-ply_open-and-create-changed.-Thanks-to-.patch
-Patch8:		0008-Install-vpgl-as-some-libraries-need-it.-Thanks-to-Th.patch
-Patch9:		0009-Reverted-an-incompatible-API-changes-which-breaks-IT.patch
-Patch10:	0010-Do-not-include-doxygen.cmake-in-UseVXL.patch
-Patch11:	0011-More-sonames.patch
-Patch12:	0012-Bumped-up-version-to-1.14.patch
-Patch13:	0013-Use-system-FindEXPAT.patch
-Patch14:	0014-Do-not-use-bundled-minizip.patch
-Patch15:	0015-Install-more-targets.patch
+Patch8:		0008-More-sonames.patch
+Patch9:		0009-Bumped-up-version-to-1.14.patch
+Patch10:	0010-Use-system-FindEXPAT.patch
+Patch11:	0011-Do-not-use-bundled-minizip.patch
 
 Buildroot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -78,10 +74,6 @@ find contrib/brl/b3p/minizip -type f ! -name 'CMakeLists.txt' -execdir rm {} +
 %patch9 -p1
 %patch10 -p1
 %patch11 -p1
-%patch12 -p1
-%patch13 -p1
-%patch14 -p1
-%patch15 -p1
 
 #Fix lib / lib64 problem during install:
 find . -name CMakeLists.txt -exec sed -i "s/INSTALL_TARGETS([ ]*\/lib/INSTALL_TARGETS(\/lib\$\{LIB_SUFFIX\}/;" {} +
@@ -111,7 +103,7 @@ find . -name "*.txx" | xargs chmod ugo-x
 	-DVXL_USING_NATIVE_EXPAT=ON \
 	-DVXL_USING_NATIVE_SHAPELIB=ON \
 	-DBUILD_OXL:BOOL=ON \
-	-DBUILD_BRL=ON \
+	-DBUILD_BRL=OFF \
 	-DBUILD_CORE_GEOMETRY:BOOL=ON \
 	-DBUILD_CORE_IMAGING:BOOL=ON \
 	-DBUILD_CORE_NUMERICS:BOOL=ON \
@@ -125,8 +117,8 @@ find . -name "*.txx" | xargs chmod ugo-x
 	-DCMAKE_BUILD_TYPE:STRING="RelWithDebInfo" \
 	-DCMAKE_CXX_FLAGS:STRING="-fpermissive" .
 
-#make %{?_smp_mflags}
-make
+make %{?_smp_mflags}
+#make
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -183,6 +175,11 @@ develop code based on VXL.
 %{_libdir}/*.so
 
 %changelog
+* Wed Oct 10 2012 Mario Ceresa mrceresa fedoraproject org vxl 1.17.0-1%{?dist}
+- Updated to new version
+- Reworked patches to the new version
+- Disabled BRL because it gives a compilation error
+
 * Fri May 27 2011 Mario Ceresa mrceresa fedoraproject org vxl 1.14.0-1%{?dist}
 - Updated to new version
 - Added BR doxygen (thanks to Ankur for noticing it)
