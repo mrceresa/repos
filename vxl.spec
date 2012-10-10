@@ -51,7 +51,7 @@ platforms.
 cp %{SOURCE2} .
 
 #Remove bundled library (let's use FEDORA's ones)
-for l in jpeg png zlib tiff geotiff mpeg2 rply dcmtk
+for l in jpeg png zlib tiff geotiff rply dcmtk
 do
 	find v3p/$l -type f ! -name 'CMakeLists.txt' -execdir rm {} +
 done
