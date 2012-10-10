@@ -46,7 +46,7 @@ platforms.
 
 
 %prep
-%setup -q
+%setup -q -n vxl-r35730
 
 cp %{SOURCE2} .
 
