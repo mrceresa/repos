@@ -7,7 +7,7 @@ Summary:	C++ Libraries for Computer Vision Research and Implementation
 Group:		Development/Libraries
 License:	BSD
 URL:		http://vxl.sourceforge.net/
-Source0:	http://sourceforge.net/projects/vxl/files/vxl/1.14/vxl-r35730.tar.gz
+Source0:	http://sourceforge.net/projects/vxl/files/vxl/1.14/vxl-git14bc2bc.tar.gz
 Source2:	https://vxl.svn.sourceforge.net/svnroot/vxl/trunk/core/vxl_copyright.h
 Patch1:		0001-Added-include-path-for-geotiff.patch
 Patch2:		0002-Added-soname-info-for-core-libraries.patch
@@ -54,6 +54,8 @@ BuildRequires:	SIMVoleon-devel
 BuildRequires:	texi2html
 BuildRequires:	xerces-c-devel
 BuildRequires:	zlib-devel
+BuildRequires:	libXmu-devel 
+BuildRequires:	libXi-devel
 
 %description
 VXL (the Vision-something-Libraries) is a collection of C++ libraries designed
@@ -64,7 +66,7 @@ platforms.
 
 
 %prep
-%setup -q -n vxl-r35730
+%setup -q -n vxl-git14bc2bc
 
 cp %{SOURCE2} .
 
