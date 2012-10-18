@@ -1,7 +1,7 @@
 
 Name:		vxl	
 Version:	1.17.0	
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	C++ Libraries for Computer Vision Research and Implementation
 Group:		Development/Libraries
 License:	BSD
@@ -29,6 +29,7 @@ Patch15:	0015-Manage-KL-library-Submitted-by-Volker-Frohlich.patch
 Patch16:	0016-Manage-KL-library-2-2-Submitted-by-Volker-Frohlich.patch
 Patch18:	0018-Add-sonames-to-vpgl-lib.patch
 Patch19:	0019-Added-sonames-to-vgui-vidl-vpdl-Qv-libs.patch
+Patch20:	0020-Install-vrml-lib.patch
 
 #KL is used in an "UNMAINTAINED_LIBRARY", vgel is only built on request
 
@@ -138,6 +139,7 @@ find contrib/gel/vgel/kl -type f ! -name 'CMakeLists.txt' -execdir rm {} +
 %patch16 -p1
 %patch18 -p1
 %patch19 -p1
+%patch20 -p1
 
 
 #Fix lib / lib64 problem during install:
@@ -168,10 +170,10 @@ find . -name "*.txx" | xargs chmod ugo-x
 	-DVXL_USING_NATIVE_GEOTIFF=ON \
 	-DVXL_USING_NATIVE_EXPAT=ON \
 	-DVXL_USING_NATIVE_SHAPELIB=ON \
-    -DBUILD_VGUI=ON \
-    -DBUILD_BGUI3D=ON \
+	-DBUILD_VGUI=ON \
+	-DBUILD_BGUI3D=ON \
 	-DBUILD_OXL:BOOL=ON \
-	-DBUILD_BRL=OFF \
+	-DBUILD_BRL=ON \
 	-DBUILD_CORE_GEOMETRY:BOOL=ON \
 	-DBUILD_CORE_IMAGING:BOOL=ON \
 	-DBUILD_CORE_NUMERICS:BOOL=ON \
@@ -229,6 +231,10 @@ ctest .
 
 
 %changelog
+* Thu Oct 18 2012 Mario Ceresa mrceresa fedoraproject org vxl 1.17.0-4%{?dist}
+- Fixed missing oxl_vrml lib
+- Turn on compilation of BRL
+
 * Sun Oct 14 2012 Mario Ceresa mrceresa fedoraproject org vxl 1.17.0-3%{?dist}
 - More fixes from Volker's post https://bugzilla.redhat.com/show_bug.cgi?id=567086#c42
 - 
