@@ -134,6 +134,7 @@ rm -rf %{buildroot}
 #In order to recognize /usr/lib64/InsightToolkit we need to ship a proper file for /etc/ld.so.conf.d/
 %config %{_sysconfdir}/ld.so.conf.d/%{name}.conf
 %{_bindir}/itkTestDriver
+%{_bindir}/DicomSeriesReadImageWrite2
 %{_libdir}/%{name}/*.so.*
 
 %doc Copyright/*

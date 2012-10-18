@@ -64,7 +64,7 @@ build_if_not_already() {
         echo "Building " $name
         build_target $branch $target $name $ver
 	# Make newly built packages available as dependecies for the next ones
-        ./update_repo
+    #    ./update_repo
     fi
 
     num=$(find $repoDir/$branch -name "$name*" | grep -v SRPMS | wc | awk '{print $1}')

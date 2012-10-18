@@ -12,20 +12,23 @@ tar -czf ralph_svn.tar.gz ralph-core
 #### Build the source rpm
 mv ralph_svn.tar.gz $HOME/rpmbuild/SOURCES/
 
-pushd $HOME/rpmbuild/
-
-# Clean old packages
-rm SRPMS/ralph* RPMS/x86_64/ralph*
 # Sed the spec to change version as appropriate!
 newRev='Release:\t\t'$coreRev
-sed s/^Release.*/$newRev/ SPECS/ralph-core.spec.in > SPECS/ralph-core.spec
+sed s/^Release.*/$newRev/ ralph-core.spec.in > ralph-core.spec
+spec_dir=$(pwd)
+
+pushd $HOME/rpmbuild/
+
+## Clean old packages
+#rm SRPMS/ralph* RPMS/x86_64/ralph*
 # Generate the SRPM
-rpmbuild -bs SPECS/ralph-core.spec
+rpmbuild -bs $spec_dir/ralph-core.spec
 
 popd
 
 #### Build the binary rpm
-for target in "${targets[@]}"
-do
-    build_if_not_already $target ralph-core
-done
+#for branch in "${branches[@]}"
+#do
+#    target=$branch"-ralph-x86_64"
+#    build_if_not_already $branch $target ralph-core
+#done

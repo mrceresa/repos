@@ -12,21 +12,22 @@ tar -czf ralph_filters.tar.gz ralph-filters
 ##### Build the source rpm
 mv ralph_filters.tar.gz $HOME/rpmbuild/SOURCES/
 
-pushd $HOME/rpmbuild/
-
 # Clean old rpms
-rm SRPMS/ralph* RPMS/x86_64/ralph*
+#rm SRPMS/ralph* RPMS/x86_64/ralph*
 # Sed the spec to change version as appropriate!
 newRev='Release:\t\t'$filtersRev
-sed s/^Release.*/$newRev/ SPECS/ralph-filters.spec.in > SPECS/ralph-filters.spec
+sed s/^Release.*/$newRev/ ralph-filters.spec.in > ralph-filters.spec
+spec_dir=$(pwd)
+
 # Generate the SRPM
-rpmbuild -bs SPECS/ralph-filters.spec
+pushd $HOME/rpmbuild/
+rpmbuild -bs $spec_dir/ralph-filters.spec
 
 popd
 
 # Copy binary rpms to repo dir
-for target in "${targets[@]}"
-do
-    build_if_not_already $target ralph-filters
-done
+#for target in "${targets[@]}"
+#do
+#    build_if_not_already $target ralph-filters
+#done
 
