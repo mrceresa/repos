@@ -100,7 +100,7 @@ cp %{SOURCE2} .
 #TODO: netlib is made by f2c
 #TODO: triangle.c in netlib
 # QV is a Silicon Graphics' VRML parser from the 90s
-for l in jpeg png zlib tiff geotiff rply dcmtk
+for l in jpeg png zlib tiff geotiff rply dcmtk bzlib
 do
 	find v3p/$l -type f ! -name 'CMakeLists.txt' -execdir rm {} +
 done
@@ -173,7 +173,7 @@ find . -name "*.txx" | xargs chmod ugo-x
 	-DBUILD_VGUI=ON \
 	-DBUILD_BGUI3D=ON \
 	-DBUILD_OXL:BOOL=ON \
-	-DBUILD_BRL=ON \
+	-DBUILD_BRL=OFF \
 	-DBUILD_CORE_GEOMETRY:BOOL=ON \
 	-DBUILD_CORE_IMAGING:BOOL=ON \
 	-DBUILD_CORE_NUMERICS:BOOL=ON \
