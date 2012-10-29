@@ -42,6 +42,7 @@ BuildRequires:	Coin2-devel
 BuildRequires:	dcmtk-devel
 BuildRequires:	doxygen
 BuildRequires:	expat-devel
+BuildRequires:	expatpp-devel
 BuildRequires:	freeglut-devel
 BuildRequires:	klt-devel
 BuildRequires:	libpng-devel
@@ -97,9 +98,8 @@ develop code based on VXL.
 cp %{SOURCE2} .
 
 #Remove bundled library (let's use FEDORA's ones)
-#TODO: netlib is made by f2c
-#TODO: triangle.c in netlib
-# QV is a Silicon Graphics' VRML parser from the 90s
+# v3p/netlib (made by f2c) dependency not removed because of heavily modifications
+# QV is a Silicon Graphics' VRML parser from the 90s. Now unmantained.
 for l in jpeg png zlib tiff geotiff rply dcmtk bzlib
 do
 	find v3p/$l -type f ! -name 'CMakeLists.txt' -execdir rm {} +
@@ -109,14 +109,9 @@ find contrib/brl/b3p/shapelib -type f ! -name 'CMakeLists.txt' -execdir rm {} +
 find contrib/brl/b3p/minizip -type f ! -name 'CMakeLists.txt' -execdir rm {} +
 find contrib/brl/b3p/expat -type f ! -name 'CMakeLists.txt' -execdir rm {} +
 find contrib/gel/vgel/kl -type f ! -name 'CMakeLists.txt' -execdir rm {} +
-
-#TODO: expatpp
-# Back from 2003, no tarball
-# http://sourceforge.net/projects/expatpp/
+find contrib/brl/b3p/expatpp -type f ! -name 'CMakeLists.txt' -execdir rm {} +
 
 # v3p/mpeg2 lib in fedora is not enough to build the target. Moreover it is in rpmfusion repo
-# v3p/netlib dependency not removed because of heavily modifications
-
 
 #TODO: Various
 #vxl-devel.x86_64: E: invalid-soname /usr/lib64/libvvid.so libvvid.so
@@ -187,15 +182,15 @@ find . -name "*.txx" | xargs chmod ugo-x
 	-DCMAKE_BUILD_TYPE:STRING="RelWithDebInfo" \
 	-DCMAKE_CXX_FLAGS:STRING="-fpermissive" .
 
-    # Why is expat stated, but not shapelib?
-    # DCMDK Cmake -- Included in bundle, but why?
-    #BUILD_VGUI?
-    #wxwidgets seems to be found
-    #Multiple versions of QT found please set DESIRED_QT_VERSION
-    #TODO: Xerces for brl
-    #TODO: Testing?
-    #BR: coin2, coin3 (coin3d) brl, bbas
-    #BR: SIMVoleon-devel
+# Why is expat stated, but not shapelib?
+# DCMDK Cmake -- Included in bundle, but why?
+#BUILD_VGUI?
+#wxwidgets seems to be found
+#Multiple versions of QT found please set DESIRED_QT_VERSION
+#TODO: Xerces for brl
+#TODO: Testing?
+#BR: coin2, coin3 (coin3d) brl, bbas
+#BR: SIMVoleon-devel
 
 make %{?_smp_mflags}
 
@@ -231,6 +226,12 @@ ctest .
 
 
 %changelog
+
+* Mon Oct 29 2012 Mario Ceresa mrceresa fedoraproject org vxl 1.17.0-5%{?dist}
+- Removed expatpp bundled library and added corresponding BR
+- Removed bundled bzip
+
+
 * Thu Oct 18 2012 Mario Ceresa mrceresa fedoraproject org vxl 1.17.0-4%{?dist}
 - Fixed missing oxl_vrml lib
 - Turn on compilation of BRL
