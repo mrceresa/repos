@@ -166,8 +166,8 @@ find . -name "*.txx" | xargs chmod ugo-x
 	-DVXL_USING_NATIVE_EXPAT=ON \
 	-DVXL_USING_NATIVE_SHAPELIB=ON \
 	-DVXL_USING_NATIVE_BZLIB2=ON \
-	-DBUILD_VGUI=ON \
-	-DBUILD_BGUI3D=ON \
+	-DBUILD_VGUI=OFF \
+	-DBUILD_BGUI3D=OFF \
 	-DBUILD_OXL:BOOL=ON \
 	-DBUILD_BRL=OFF \
 	-DBUILD_CORE_GEOMETRY:BOOL=ON \
@@ -181,11 +181,12 @@ find . -name "*.txx" | xargs chmod ugo-x
 	-DBUILD_TESTING:BOOL=OFF \
 	-DBUILD_DOCUMENTATION:BOOL=ON \
 	-DCMAKE_BUILD_TYPE:STRING="RelWithDebInfo" \
-	-DCMAKE_CXX_FLAGS:STRING="-fpermissive" .
+	-DCMAKE_CXX_FLAGS:STRING="-fpermissive" \
+	-DPYTHON_LIBRARY=/usr/lib64/libpython2.7.so .
 
 # Why is expat stated, but not shapelib?
 # DCMDK Cmake -- Included in bundle, but why?
-#BUILD_VGUI?
+#BUILD_VGUI? NO, it depends on box2m which in turns relies on OPENCL which is not available in FEDORA
 #wxwidgets seems to be found
 #Multiple versions of QT found please set DESIRED_QT_VERSION
 #TODO: Xerces for brl
