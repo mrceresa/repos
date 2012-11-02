@@ -1,12 +1,12 @@
 
 Name:		vxl	
 Version:	1.17.0	
-Release:	4%{?dist}
+Release:	6%{?dist}
 Summary:	C++ Libraries for Computer Vision Research and Implementation
 Group:		Development/Libraries
 License:	BSD
 URL:		http://vxl.sourceforge.net/
-Source0:	http://sourceforge.net/projects/vxl/files/vxl/1.14/vxl-git14bc2bc.tar.gz
+Source0:	http://sourceforge.net/projects/vxl/files/vxl/1.14/vxl-git4e07960.tar.gz
 Source2:	https://vxl.svn.sourceforge.net/svnroot/vxl/trunk/core/vxl_copyright.h
 # Fedora has a distribution-specific include dir
 Patch1:		0001-Added-include-path-for-geotiff.patch
@@ -27,9 +27,13 @@ Patch13:	0013-Added-SIMVoleon-Submitted-by-Volker-Frohlich.patch
 Patch14:	0014-Added-additional-search-path-for-xerces-Submitted-by.patch
 Patch15:	0015-Manage-KL-library-Submitted-by-Volker-Frohlich.patch
 Patch16:	0016-Manage-KL-library-2-2-Submitted-by-Volker-Frohlich.patch
-Patch18:	0018-Add-sonames-to-vpgl-lib.patch
-Patch19:	0019-Added-sonames-to-vgui-vidl-vpdl-Qv-libs.patch
-Patch20:	0020-Install-vrml-lib.patch
+Patch17:	0017-Add-sonames-to-vpgl-lib.patch
+Patch18:	0018-Added-sonames-to-vgui-vidl-vpdl-Qv-libs.patch
+Patch19:	0019-Removed-box2m-which-requires-OpenCL-libraries.patch
+Patch20:	0020-Included-missing-vcl_cstdio.h-header.patch
+Patch21:	0021-Use-expatpp.h-which-is-provided-by-fedora-repos.patch
+Patch22:	0022-Include-missing-vcl_cstdio.h-header.patch
+Patch23:	0023-Remove-volm-because-of-error-in-function-prototype.patch
 
 #KL is used in an "UNMAINTAINED_LIBRARY", vgel is only built on request
 
@@ -93,7 +97,7 @@ You should install this package if you would like to
 develop code based on VXL.
 
 %prep
-%setup -q -n vxl-git14bc2bc
+%setup -q -n vxl-git4e07960
 
 cp %{SOURCE2} .
 
@@ -132,9 +136,13 @@ find contrib/brl/b3p/expatpp -type f ! -name 'CMakeLists.txt' -execdir rm {} +
 %patch14 -p1
 %patch15 -p1
 %patch16 -p1
+%patch17 -p1
 %patch18 -p1
 %patch19 -p1
 %patch20 -p1
+%patch21 -p1
+%patch22 -p1
+%patch23 -p1
 
 
 #Fix lib / lib64 problem during install:
@@ -192,7 +200,6 @@ find . -name "*.txx" | xargs chmod ugo-x
 #TODO: Xerces for brl
 #TODO: Testing?
 #BR: coin2, coin3 (coin3d) brl, bbas
-#BR: SIMVoleon-devel
 
 make %{?_smp_mflags}
 
@@ -228,6 +235,9 @@ ctest .
 
 
 %changelog
+* Fri Nov 02 2012 Mario Ceresa mrceresa fedoraproject org vxl 1.17.0-6%{?dist}
+- Patched to build BRL
+- Updated to last version
 
 * Mon Oct 29 2012 Mario Ceresa mrceresa fedoraproject org vxl 1.17.0-5%{?dist}
 - Removed expatpp bundled library and added corresponding BR
