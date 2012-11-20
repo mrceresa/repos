@@ -2,12 +2,12 @@
 Buildroot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Summary:        Insight Toolkit library for medical image processing
 Name:           InsightToolkit
-Version:        3.20.1
+Version:        4.2.1
 Release:        1%{?dist}
 License:        BSD
 Group:          Applications/Engineering
 Vendor:         Insight Software Consortium
-Source0:        https://github.com/mrceresa/ITK/zipball/v3.20.1_fc15.zip
+Source0:        http://downloads.sourceforge.net/project/itk/itk/4.2/InsightToolkit-4.2.1.tar.gz
 Source1:        http://downloads.sourceforge.net/project/itk/itk/2.4/ItkSoftwareGuide-2.4.0.pdf
 URL:            http://www.itk.org/
 
@@ -24,12 +24,12 @@ BuildRequires:  libxml2-devel
 BuildRequires:  libpng-devel
 BuildRequires:  libtiff-devel
 BuildRequires:  zlib-devel
-BuildRequires:  fftw3-devel
+#BuildRequires:  fftw3-devel
 BuildRequires:  libjpeg-devel
-BuildRequires:  gdcm-devel
-BuildRequires:  vxl-devel
+#BuildRequires:  gdcm-devel
+#BuildRequires:  vxl-devel
 #For documentation
-BuildRequires:  graphviz
+#BuildRequires:  graphviz
 BuildRequires:  doxygen
 
 %description
@@ -49,7 +49,7 @@ that the code is highly efficient, and that many software problems are
 discovered at compile-time, rather than at run-time during program execution.
 
 %prep
-%setup -q -n mrceresa-ITK-69c640a
+%setup -q
 
 #%patch1 -p1
 #%patch2 -p1
@@ -60,13 +60,10 @@ discovered at compile-time, rather than at run-time during program execution.
 
 #for l in itkzlib zlib itkpng itktiff gdcm
 # Leave itkpng because new libpng changed apis
-for l in itkzlib zlib itktiff gdcm
-do
-	find Utilities/$l -type f ! -name 'CMakeLists.txt' -execdir rm {} +
-done
-
-# remove CVS dirs, if they exist
-find -name CVS -type d | xargs rm -rf
+#for l in ZLIB GDCM JPEG PNG TIFF Expat OpenJPEG
+#do
+#	find Modules/ThirdParty/$l -type f ! -name 'CMakeLists.txt' -execdir rm {} +
+#done
 
 # copy guide into the appropriate directory
 cp %{SOURCE1} .
@@ -74,37 +71,31 @@ cp %{SOURCE1} .
 # remove applications: they are shipped separately now
 rm -rf Applications/
 
-# remove utilities that are under review request in Fedora:
-#rm -rf Utilities/netlib
-#rm -rf Utilities/openjpeg
-
-# remove utilities that still needs to be packaged in Fedora
-#rm -rf Utilities/NrrdIO
-#rm -rf Utilities/DICOMParser
-#rm -rf Utilities/itkjpeg
-
 ### end of removing
+mkdir itk_build
 
 %build
+cd itk_build
 %cmake -DBUILD_SHARED_LIBS:BOOL=ON \
        -DBUILD_EXAMPLES:BOOL=ON \
        -DCMAKE_BUILD_TYPE:STRING="RelWithDebInfo"\
        -DCMAKE_VERBOSE_MAKEFILE=ON\
        -DBUILD_TESTING=OFF\
-       -DITK_USE_ORIENTED_IMAGE_DIRECTION:BOOL=ON \
-       -DITK_IMAGE_BEHAVES_AS_ORIENTED_IMAGE:BOOL=ON \
-       -DITK_USE_CENTERED_PIXEL_COORDINATES_CONSISTENTLY=ON \
+       -DITKV3_COMPATIBILITY:BOOL=ON \
+       -DITK_BUILD_ALL_MODULES:BOOL=ON \
+       -DITK_WRAP_PYTHON:BOOL=ON \
+       -DITK_WRAP_JAVA:BOOL=ON \
+       -DBUILD_DOCUMENTATION:BOOL=ON \
        -DITK_USE_REVIEW:BOOL=ON \
-       -DITK_USE_REVIEW_STATISTICS=ON \
        -DITK_USE_PATENTED:BOOL=OFF \
-       -DITK_USE_SYSTEM_TIFF=ON \
-       -DITK_USE_SYSTEM_PNG=OFF \
+       -DITK_USE_SYSTEM_HDF5=ON \
+       -DITK_USE_SYSTEM_JPEG=ON \
+       -DITK_USE_SYSTEM_TIFF=OFF \
+       -DITK_USE_SYSTEM_PNG=ON \
        -DITK_USE_SYSTEM_ZLIB=ON \
-       -DITK_USE_SYSTEM_LIBXML2=ON \
        -DITK_USE_SYSTEM_GDCM=ON \
-       -DITK_USE_SYSTEM_VXL=ON \
-       -DITK_USE_SYSTEM_EXPAT=ON \
-       -DCMAKE_CXX_FLAGS:STRING="-fpermissive" .
+       -DITK_USE_SYSTEM_VXL=OFF \
+       -DCMAKE_CXX_FLAGS:STRING="-fpermissive" ../
 
 make %{?_smp_mflags}
 
@@ -190,6 +181,9 @@ ITK doc
 
 
 %changelog
+* Tue Nov 20 2012 Mario Ceresa mrceresa fedoraproject org InsightToolkit 4.2.1-1
+- Updated to new version
+
 * Wed Nov 30 2011 Mario Ceresa mrceresa fedoraproject org InsightToolkit 3.20.1-1
 - Updated to new version
 - Added binary morphology code
