@@ -2,17 +2,17 @@
 
 SUCCESS=0
 
-repoDir=~/local_repo/cil
+repoDir=~/repos
 rpmsrcDir=~/rpmbuild/SRPMS
 rpmbuildDir=/var/lib/mock
 suffix="-ralph-x86_64"
 
-fasLogin=mrceresa
+fasLogin=mario
 repoLocalDir=$repoDir
 repoName=cil
 
-declare -a rpmdir=(i386 x86_64 noarch SRPMS)
-declare -a branches=(fedora-17 fedora-16)
+declare -a rpmdir=(i686 x86_64 noarch SRPMS)
+declare -a branches=(fedora-18)
 
 build_target() {
     branch=$1

@@ -27,8 +27,8 @@ rpmbuild -bs $spec_dir/ralph-core.spec
 popd
 
 #### Build the binary rpm
-#for branch in "${branches[@]}"
-#do
-#    target=$branch"-ralph-x86_64"
-#    build_if_not_already $branch $target ralph-core
-#done
+for branch in "${branches[@]}"
+do
+    target=$branch"-ralph-x86_64"
+    build_if_not_already $branch $target ralph-core
+done

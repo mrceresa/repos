@@ -2,7 +2,7 @@
 
 source defs.sh
 
-declare -a deps=(libodb libodb-mysql vxl InsightToolkit)
+declare -a deps=(libodb libodb-mysql)
 
 for branch in "${branches[@]}"
 do

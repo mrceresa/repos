@@ -1,5 +1,4 @@
 
-Buildroot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Summary:        ITK C++ filters to perform image analysis tasks in RALPH pacakge
 Name:           ralph-filters
 Version:        0.2
@@ -54,7 +53,6 @@ EOF
 rm -rf %{buildroot}
 
 %files
-%defattr(-,root,root,-)
 %dir %{_libdir}/ralph/filters/
 %{_sysconfdir}/ld.so.conf.d/ralph.conf
 %{_libdir}/ralph/filters/*
@@ -72,10 +70,12 @@ Requires:       %{name} = %{version}-%{release}
 ralph-cfilters
 
 %files devel
-%defattr(-,root,root)
 %{_includedir}/ralph/*
 
 %changelog
+* Mon Apr 29 2013 Mario Ceresa mrceresa@gmail.com ralph-filters 0.1-0.20101122svn159
+- Cleanedup specilfe
+
 * Tue Mar 27 2012 Mario Ceresa mrceresa@gmail.com ralph-filters 0.1-0.20101122svn159
 - Added permissive flag
 

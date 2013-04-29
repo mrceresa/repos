@@ -26,8 +26,9 @@ rpmbuild -bs $spec_dir/ralph-filters.spec
 popd
 
 # Copy binary rpms to repo dir
-#for target in "${targets[@]}"
-#do
-#    build_if_not_already $target ralph-filters
-#done
+for target in "${targets[@]}"
+do
+    target=$branch"-ralph-x86_64"
+    build_if_not_already $branch $target ralph-filters
+done
 
