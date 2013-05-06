@@ -15,10 +15,11 @@ BuildRequires:	boost-devel
 BuildRequires:	boost-filesystem
 BuildRequires:	geos-devel
 BuildRequires:	xerces-c-devel
-BuildRequires:	libodb-mysql-devel
+#BuildRequires:	libodb-mysql-devel
 BuildRequires:	log4cpp-devel
 BuildRequires:	vtk-devel
 BuildRequires:	vxl-devel
+BuildRequires:	hdf5-devel
 
 %description
 
