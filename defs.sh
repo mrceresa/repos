@@ -31,13 +31,13 @@ build_target() {
 	echo "Please specify SRPM name (without .src.rpm)"
         exit
     fi
-    
-    mock rebuild --no-clean -v -r $target $rpmsrcDir/$name$ver*.src.rpm
+    srpm_pkg=$(ls -latr ~/rpmbuild/SRPMS/ralph-filters*.src.rpm | tail -n1 | cut -d' ' -f10)
+    mock rebuild --no-clean -v -r $target $srpm_pkg
     
     if [ ! "$?" -eq $SUCCESS ]
     then
 	echo "Can't build package "$name" retrying once..."
-	mock rebuild --no-clean -v -r $target $rpmsrcDir/$name$ver*.src.rpm
+	mock rebuild --no-clean -v -r $target $srpm_pkg
 	if [ ! "$?" -eq $SUCCESS ]
         then
 	    echo "Can't build package "$name" please check!"
@@ -61,10 +61,11 @@ build_if_not_already() {
 
     if [ "$num" -eq "0" ]
     then
-        echo "Building " $name
+        echo "Building " $name " ver " $ver " on branch " $branch " for target " $target
         build_target $branch $target $name $ver
 	# Make newly built packages available as dependecies for the next ones
     #    ./update_repo
+
     fi
 
     num=$(find $repoDir/$branch -name "$name*" | grep -v SRPMS | wc | awk '{print $1}')
