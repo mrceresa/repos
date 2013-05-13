@@ -31,7 +31,7 @@ build_target() {
 	echo "Please specify SRPM name (without .src.rpm)"
         exit
     fi
-    srpm_pkg=$(ls -latr ~/rpmbuild/SRPMS/ralph-filters*.src.rpm | tail -n1 | cut -d' ' -f10)
+    srpm_pkg=$(ls -latr ~/rpmbuild/SRPMS/ralph-filters*.src.rpm | tail -n1 | cut -d' ' -f9)
     mock rebuild --no-clean -v -r $target $srpm_pkg
     
     if [ ! "$?" -eq $SUCCESS ]
