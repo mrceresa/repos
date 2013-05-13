@@ -1,7 +1,7 @@
 
 Summary:        ITK C++ filters to perform image analysis tasks in RALPH pacakge
 Name:           ralph-filters
-Version:        0.2
+Version:        0.3
 Release:        0.20101122svn159
 License:        BSD
 Group:          Applications/Engineering
@@ -9,7 +9,7 @@ Vendor:         Center for Applied Medical Research
 Source0:        http://www.cima.es/ralph_filters.tar.gz
 URL:            http://www.cima.es/
 
-BuildRequires:  cmake >= 2.6.0
+BuildRequires:  cmake
 BuildRequires:  InsightToolkit-devel >= 3.20.1
 BuildRequires:	boost-devel
 BuildRequires:	boost-filesystem
@@ -20,6 +20,8 @@ BuildRequires:	log4cpp-devel
 BuildRequires:	vtk-devel
 BuildRequires:	vxl-devel
 BuildRequires:	hdf5-devel
+
+Requires:	octave-dicom
 
 %description
 
